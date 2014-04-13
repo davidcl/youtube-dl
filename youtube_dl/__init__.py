@@ -53,6 +53,7 @@ __authors__  = (
     'Mattias Harrysson',
     'phaer',
     'Sainyam Kapoor',
+    'Clément \'davidcl\' David',
 )
 
 __license__ = 'Public Domain'
@@ -99,6 +100,7 @@ from .postprocessor import (
     FFmpegExtractAudioPP,
     FFmpegEmbedSubtitlePP,
     XAttrMetadataPP,
+    PlaylistGeneratorPP,
 )
 
 
@@ -261,8 +263,8 @@ def parseOpts(overrideArguments=None):
         help=u'Work around terminals that lack bidirectional text support. Requires bidiv or fribidi executable in PATH')
     general.add_option(
         '--default-search',
-        dest='default_search', metavar='PREFIX',
-        help='Use this prefix for unqualified URLs. For example "gvsearch2:" downloads two videos from google videos for  youtube-dl "large apple". By default (with value "auto") youtube-dl guesses.')
+            dest='default_search', metavar='PREFIX',
+            help='Use this prefix for unqualified URLs. For example "gvsearch2:" downloads two videos from google videos for  youtube-dl "large apple". By default (with value "auto") youtube-dl guesses.')
     general.add_option(
         '--ignore-config',
         action='store_true',
@@ -515,6 +517,8 @@ def parseOpts(overrideArguments=None):
         help='Prefer avconv over ffmpeg for running the postprocessors (default)')
     postproc.add_option('--prefer-ffmpeg', action='store_true', dest='prefer_ffmpeg',
         help='Prefer ffmpeg over avconv for running the postprocessors')
+    postproc.add_option('--generate-playlist', metavar='FILE', dest='generateplaylist', default=None,
+            help='generate a local playlist file ("m3u", "pls", "asx", "xspf" extensions supported)')
 
 
     parser.add_option_group(general)
@@ -816,6 +820,8 @@ def _real_main(argv=None):
             if not opts.addmetadata:
                 ydl.add_post_processor(FFmpegAudioFixPP())
             ydl.add_post_processor(AtomicParsleyPP())
+        if opts.generateplaylist:
+            ydl.add_post_processor(PlaylistGeneratorPP(filename=opts.generateplaylist))
 
         # Update version
         if opts.update_self:
