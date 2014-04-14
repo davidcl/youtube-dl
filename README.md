@@ -258,6 +258,8 @@ which means you can modify it, redistribute it or use it however you like.
                                      postprocessors (default)
     --prefer-ffmpeg                  Prefer ffmpeg over avconv for running the
                                      postprocessors
+    --generate-playlist FILE         generate a local playlist file ("m3u", 
+                                     "pls", "asx", "xspf" extensions supported)
 
 # CONFIGURATION
 
